@@ -1,0 +1,325 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../core/constants/app_constants.dart';
+import '../../domain/entities/mood_entry.dart';
+import '../bloc/mood/mood_bloc.dart';
+import '../widgets/mood_selector.dart';
+
+class MoodCheckinScreen extends StatefulWidget {
+  const MoodCheckinScreen({super.key});
+
+  @override
+  State<MoodCheckinScreen> createState() => _MoodCheckinScreenState();
+}
+
+class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
+  MoodType? selectedMood;
+  final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<MoodBloc>().add(LoadMoodEntries());
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mood Check-in'),
+        backgroundColor: AppConstants.surfaceColor,
+      ),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final height = constraints.maxHeight;
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05,
+                vertical: height * 0.02,
+              ),
+              child: Column(
+                children: [
+                  MoodSelector(
+                    selectedMood: selectedMood,
+                    onMoodSelected: (mood) {
+                      setState(() {
+                        selectedMood = mood;
+                      });
+                    },
+                  ),
+                  SizedBox(height: height * 0.03),
+                  _buildNoteInput(width),
+                  SizedBox(height: height * 0.03),
+                  _buildSaveButton(width),
+                  SizedBox(height: height * 0.03),
+                  _buildMoodHistory(height),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNoteInput(double width) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'What\'s on your mind? (Optional)',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: AppConstants.textPrimaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: width * 0.045,
+          ),
+        ),
+        SizedBox(height: width * 0.02),
+        TextField(
+          controller: _noteController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: 'Share your thoughts, feelings, or what happened today...',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+              borderSide: BorderSide(
+                color: AppConstants.primaryColor,
+                width: 2,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton(double width) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: selectedMood != null ? _saveMood : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppConstants.primaryColor,
+          padding: EdgeInsets.symmetric(vertical: width * 0.04),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+          ),
+        ),
+        child: Text(
+          'Save Mood',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: AppConstants.textPrimaryColor,
+            fontWeight: FontWeight.w600,
+            fontSize: width * 0.045,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoodHistory(double height) {
+    return SizedBox(
+      height: height * 0.4,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Recent Moods',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: AppConstants.textPrimaryColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: height * 0.02),
+          BlocBuilder<MoodBloc, MoodState>(
+            builder: (context, state) {
+              if (state is MoodLoaded) {
+                final recentMoods = state.moodEntries
+                    .take(10)
+                    .toList()
+                    .reversed
+                    .toList();
+                
+                if (recentMoods.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.emoji_emotions_outlined,
+                          size: height * 0.08,
+                          color: AppConstants.textSecondaryColor,
+                        ),
+                        SizedBox(height: height * 0.02),
+                        Text(
+                          'No mood entries yet',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppConstants.textSecondaryColor,
+                          ),
+                        ),
+                        Text(
+                          'Start by logging your first mood!',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppConstants.textSecondaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                
+                return ListView.builder(
+                  itemCount: recentMoods.length,
+                  itemBuilder: (context, index) {
+                    final mood = recentMoods[index];
+                    return _buildMoodHistoryItem(mood, height);
+                  },
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoodHistoryItem(MoodEntry mood, double height) {
+    String emoji;
+    String label;
+    Color color;
+
+    switch (mood.mood) {
+      case MoodType.sad:
+        emoji = '😢';
+        label = 'Sad';
+        color = AppConstants.sadColor;
+        break;
+      case MoodType.neutral:
+        emoji = '😐';
+        label = 'Okay';
+        color = AppConstants.neutralColor;
+        break;
+      case MoodType.happy:
+        emoji = '😊';
+        label = 'Happy';
+        color = AppConstants.happyColor;
+        break;
+    }
+
+    return Container(
+      margin: EdgeInsets.only(bottom: height * 0.01),
+      padding: EdgeInsets.all(height * 0.02),
+      decoration: BoxDecoration(
+        color: AppConstants.surfaceColor,
+        borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+        boxShadow: AppConstants.softShadow,
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(height * 0.01),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(AppConstants.borderRadiusS),
+            ),
+            child: Text(
+              emoji,
+              style: TextStyle(fontSize: height * 0.03),
+            ),
+          ),
+          SizedBox(width: height * 0.02),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppConstants.textPrimaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (mood.note != null && mood.note!.isNotEmpty) ...[
+                  SizedBox(height: height * 0.005),
+                  Text(
+                    mood.note!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppConstants.textSecondaryColor,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+                SizedBox(height: height * 0.005),
+                Text(
+                  _formatDate(mood.timestamp),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: AppConstants.textSecondaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays == 0) {
+      return 'Today at ${_formatTime(date)}';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday at ${_formatTime(date)}';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
+  }
+
+  String _formatTime(DateTime date) {
+    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  void _saveMood() {
+    if (selectedMood != null) {
+      context.read<MoodBloc>().add(
+        SaveMoodEntry(
+          mood: selectedMood!,
+          note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
+        ),
+      );
+      
+      _noteController.clear();
+      setState(() {
+        selectedMood = null;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Mood saved successfully!'),
+          backgroundColor: AppConstants.successColor,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+          ),
+        ),
+      );
+    }
+  }
+} 

@@ -20,10 +20,10 @@ void main() {
 
     // Verify that the app title is displayed
     expect(find.text('MoodMate'), findsOneWidget);
-    
+
     // Verify that the welcome text is displayed
     expect(find.text('Welcome to'), findsOneWidget);
-    
+
     // Verify that quick actions section exists
     expect(find.text('Quick Actions'), findsOneWidget);
   });

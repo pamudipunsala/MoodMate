@@ -9,21 +9,31 @@ class EmergencyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calm & Support'),
-        backgroundColor: AppConstants.surfaceColor,
+        title: Text(
+          'Emergency Resources',
+          style: TextStyle(
+            fontSize: width * 0.05,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: AppConstants.primaryColor,
+        foregroundColor: AppConstants.textPrimaryColor,
+        elevation: 0,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppConstants.spacingM),
+          padding: EdgeInsets.all(width * 0.04),
           child: Column(
             children: [
-              _buildCalmingSection(),
-              const SizedBox(height: AppConstants.spacingXL),
-              _buildAffirmationsSection(),
-              const SizedBox(height: AppConstants.spacingXL),
-              _buildEmergencyResourcesSection(context),
+              _buildCalmingSection(width, height),
+              SizedBox(height: height * 0.03),
+              _buildAffirmationsSection(width, height),
+              SizedBox(height: height * 0.03),
+              _buildEmergencyResourcesSection(context, width, height),
             ],
           ),
         ),
@@ -31,25 +41,28 @@ class EmergencyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCalmingSection() {
+  Widget _buildCalmingSection(double width, double height) {
     return Column(
       children: [
         Text(
           'Take a moment to breathe',
           style: TextStyle(
-            fontSize: AppConstants.fontSizeXLarge,
+            fontSize: width * 0.06,
             fontWeight: FontWeight.w600,
             color: AppConstants.textPrimaryColor,
           ),
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: AppConstants.spacingL),
-        const CalmingAnimation(),
+        SizedBox(height: height * 0.02),
+        CalmingAnimation(
+          heartColor: const Color(0xFF6A1B9A), // Deep purple
+          circleColor: const Color(0xFF8E24AA).withOpacity(0.3), // Visible purple
+        ),
       ],
     );
   }
 
-  Widget _buildAffirmationsSection() {
+  Widget _buildAffirmationsSection(double width, double height) {
     final affirmations = [
       'You are not alone in this.',
       'Your feelings are valid and temporary.',
@@ -64,37 +77,37 @@ class EmergencyScreen extends StatelessWidget {
         Text(
           'Positive Affirmations',
           style: TextStyle(
-            fontSize: AppConstants.fontSizeLarge,
+            fontSize: width * 0.05,
             fontWeight: FontWeight.w600,
             color: AppConstants.textPrimaryColor,
           ),
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        SizedBox(height: height * 0.015),
         Container(
-          padding: const EdgeInsets.all(AppConstants.spacingL),
+          padding: EdgeInsets.all(width * 0.04),
           decoration: BoxDecoration(
-            color: AppConstants.secondaryColor,
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
+            color: const Color.fromARGB(226, 160, 54, 179),
+            borderRadius: BorderRadius.circular(width * 0.04),
             boxShadow: AppConstants.softShadow,
           ),
           child: Column(
             children: affirmations.map((affirmation) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: AppConstants.spacingM),
+                padding: EdgeInsets.only(bottom: height * 0.015),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
                       Icons.favorite,
-                      size: 16,
-                      color: AppConstants.accentColor,
+                      size: width * 0.04,
+                      color: const Color.fromARGB(197, 150, 12, 58),
                     ),
-                    const SizedBox(width: AppConstants.spacingS),
+                    SizedBox(width: width * 0.02),
                     Expanded(
                       child: Text(
                         affirmation,
                         style: TextStyle(
-                          fontSize: AppConstants.fontSizeMedium,
+                          fontSize: width * 0.04,
                           color: AppConstants.textPrimaryColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -110,19 +123,19 @@ class EmergencyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmergencyResourcesSection(BuildContext context) {
+  Widget _buildEmergencyResourcesSection(BuildContext context, double width, double height) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Get Help',
           style: TextStyle(
-            fontSize: AppConstants.fontSizeLarge,
+            fontSize: width * 0.05,
             fontWeight: FontWeight.w600,
             color: AppConstants.textPrimaryColor,
           ),
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        SizedBox(height: height * 0.015),
         _buildEmergencyCard(
           context,
           title: 'National Suicide Prevention Lifeline',
@@ -130,8 +143,10 @@ class EmergencyScreen extends StatelessWidget {
           icon: Icons.phone,
           color: AppConstants.errorColor,
           onTap: () => _callEmergencyHotline(context),
+          width: width,
+          height: height,
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        SizedBox(height: height * 0.015),
         _buildEmergencyCard(
           context,
           title: 'Crisis Text Line',
@@ -139,22 +154,26 @@ class EmergencyScreen extends StatelessWidget {
           icon: Icons.message,
           color: AppConstants.warningColor,
           onTap: () => _openCrisisTextLine(context),
+          width: width,
+          height: height,
         ),
-        const SizedBox(height: AppConstants.spacingM),
+        SizedBox(height: height * 0.015),
         _buildEmergencyCard(
           context,
           title: 'Emergency Services',
-          subtitle: 'Call 911 if you\'re in immediate danger',
+          subtitle: 'Call 119 if you\'re in immediate danger',
           icon: Icons.emergency,
           color: AppConstants.errorColor,
           onTap: () => _callEmergencyServices(context),
+          width: width,
+          height: height,
         ),
-        const SizedBox(height: AppConstants.spacingL),
+        SizedBox(height: height * 0.02),
         Container(
-          padding: const EdgeInsets.all(AppConstants.spacingM),
+          padding: EdgeInsets.all(width * 0.04),
           decoration: BoxDecoration(
             color: AppConstants.primaryColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+            borderRadius: BorderRadius.circular(width * 0.02),
             border: Border.all(
               color: AppConstants.primaryColor.withOpacity(0.5),
             ),
@@ -164,14 +183,14 @@ class EmergencyScreen extends StatelessWidget {
               Icon(
                 Icons.info_outline,
                 color: AppConstants.primaryColor,
-                size: 24,
+                size: width * 0.06,
               ),
-              const SizedBox(width: AppConstants.spacingS),
+              SizedBox(width: width * 0.02),
               Expanded(
                 child: Text(
                   'Remember: You are not alone. There are people who care about you and want to help.',
                   style: TextStyle(
-                    fontSize: AppConstants.fontSizeSmall,
+                    fontSize: width * 0.035,
                     color: AppConstants.textPrimaryColor,
                     fontWeight: FontWeight.w500,
                   ),
@@ -191,14 +210,16 @@ class EmergencyScreen extends StatelessWidget {
     required IconData icon,
     required Color color,
     required VoidCallback onTap,
+    required double width,
+    required double height,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(AppConstants.spacingM),
+        padding: EdgeInsets.all(width * 0.04),
         decoration: BoxDecoration(
           color: AppConstants.surfaceColor,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+          borderRadius: BorderRadius.circular(width * 0.02),
           boxShadow: AppConstants.softShadow,
           border: Border.all(
             color: color.withOpacity(0.3),
@@ -208,18 +229,18 @@ class EmergencyScreen extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(AppConstants.spacingM),
+              padding: EdgeInsets.all(width * 0.04),
               decoration: BoxDecoration(
                 color: color.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+                borderRadius: BorderRadius.circular(width * 0.02),
               ),
               child: Icon(
                 icon,
                 color: color,
-                size: 24,
+                size: width * 0.06,
               ),
             ),
-            const SizedBox(width: AppConstants.spacingM),
+            SizedBox(width: width * 0.04),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,16 +248,16 @@ class EmergencyScreen extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeMedium,
+                      fontSize: width * 0.04,
                       fontWeight: FontWeight.w600,
                       color: AppConstants.textPrimaryColor,
                     ),
                   ),
-                  const SizedBox(height: AppConstants.spacingXS),
+                  SizedBox(height: height * 0.005),
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: AppConstants.fontSizeSmall,
+                      fontSize: width * 0.035,
                       color: AppConstants.textSecondaryColor,
                     ),
                   ),
@@ -246,7 +267,7 @@ class EmergencyScreen extends StatelessWidget {
             Icon(
               Icons.arrow_forward_ios,
               color: AppConstants.textSecondaryColor,
-              size: 16,
+              size: width * 0.04,
             ),
           ],
         ),

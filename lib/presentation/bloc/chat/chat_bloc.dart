@@ -102,23 +102,30 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     try {
+      print('ChatBloc: Starting to send message: "${event.message}"');
+      
       if (state is ChatLoaded) {
         final currentState = state as ChatLoaded;
+        print('ChatBloc: Setting isSending to true');
         emit(currentState.copyWith(isSending: true));
       }
 
+      print('ChatBloc: Calling sendMessage use case...');
       final aiMessage = await sendMessage(event.message);
+      print('ChatBloc: Received AI response: "${aiMessage.content}"');
       
       if (state is ChatLoaded) {
         final currentState = state as ChatLoaded;
         final updatedMessages = List<ChatMessage>.from(currentState.messages);
         updatedMessages.add(aiMessage);
+        print('ChatBloc: Emitting updated state with ${updatedMessages.length} messages');
         emit(ChatLoaded(
           messages: updatedMessages,
           isSending: false,
         ));
       }
     } catch (e) {
+      print('ChatBloc: Error occurred: $e');
       emit(ChatError(e.toString()));
     }
   }

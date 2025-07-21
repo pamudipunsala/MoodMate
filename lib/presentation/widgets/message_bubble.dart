@@ -12,33 +12,50 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     final isUser = message.type == MessageType.user;
-    
+    final theme = Theme.of(context);
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(
-          left: isUser ? AppConstants.spacingXL : AppConstants.spacingM,
-          right: isUser ? AppConstants.spacingM : AppConstants.spacingXL,
-          top: AppConstants.spacingS,
-          bottom: AppConstants.spacingS,
+          left: isUser ? width * 0.08 : width * 0.04,
+          right: isUser ? width * 0.04 : width * 0.08,
+          top: height * 0.005,
+          bottom: height * 0.005,
         ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppConstants.spacingM,
-          vertical: AppConstants.spacingS,
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.04,
+          vertical: height * 0.01,
         ),
         decoration: BoxDecoration(
-          color: isUser ? AppConstants.primaryColor : AppConstants.surfaceColor,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(AppConstants.borderRadiusM),
-            topRight: const Radius.circular(AppConstants.borderRadiusM),
-            bottomLeft: Radius.circular(isUser ? AppConstants.borderRadiusM : AppConstants.borderRadiusS),
-            bottomRight: Radius.circular(isUser ? AppConstants.borderRadiusS : AppConstants.borderRadiusM),
+          gradient: LinearGradient(
+            colors: isUser
+                ? [AppConstants.primaryColor, AppConstants.primaryColor.withOpacity(0.8)]
+                : [AppConstants.surfaceColor, AppConstants.backgroundColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          boxShadow: AppConstants.softShadow,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(width * 0.02),
+            topRight: Radius.circular(width * 0.02),
+            bottomLeft: Radius.circular(isUser ? width * 0.02 : width * 0.01),
+            bottomRight: Radius.circular(isUser ? width * 0.01 : width * 0.02),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isUser 
+                  ? AppConstants.primaryColor.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
+          maxWidth: width * 0.75,
+          minWidth: 0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,38 +65,47 @@ class MessageBubble extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
-                    width: 16,
-                    height: 16,
+                    width: width * 0.04,
+                    height: width * 0.04,
                     child: CircularProgressIndicator(
-                      strokeWidth: 2,
+                      strokeWidth: width * 0.005,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         AppConstants.textSecondaryColor,
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppConstants.spacingS),
-                  Text(
+                  SizedBox(width: width * 0.02),
+                  Flexible(
+                    child: Text(
                     'AI is typing...',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: AppConstants.textSecondaryColor,
                       fontStyle: FontStyle.italic,
+                      fontSize: width * 0.035,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               )
             else
-              Text(
-                message.content,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              Flexible(
+                child: Text(
+                  message.content.isNotEmpty ? message.content : '[No message]',
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: isUser ? AppConstants.textPrimaryColor : AppConstants.textPrimaryColor,
+                  fontSize: width * 0.035,
+                  ),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
                 ),
               ),
-            const SizedBox(height: AppConstants.spacingXS),
+            SizedBox(height: height * 0.005),
             Text(
-              _formatTime(message.timestamp),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              message.timestamp != null ? _formatTime(message.timestamp) : '',
+              style: theme.textTheme.bodySmall?.copyWith(
                 color: AppConstants.textSecondaryColor,
-                fontSize: AppConstants.fontSizeSmall - 2,
+                fontSize: width * 0.03,
               ),
             ),
           ],

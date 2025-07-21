@@ -8,6 +8,8 @@ import '../widgets/mood_selector.dart';
 import 'mood_checkin_screen.dart';
 import 'chat_screen.dart';
 import 'emergency_screen.dart';
+import 'journal_screen.dart';
+import 'quote_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,32 +28,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: AppConstants.backgroundColor,
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final width = constraints.maxWidth;
-            final height = constraints.maxHeight;
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal: width * 0.05,
-                vertical: height * 0.02,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(width),
-                  SizedBox(height: height * 0.03),
-                  _buildTodayMood(),
-                  SizedBox(height: height * 0.03),
-                  _buildQuoteOfTheDay(),
-                  SizedBox(height: height * 0.03),
-                  _buildQuickActions(width),
-                  SizedBox(height: height * 0.03),
-                ],
-              ),
-            );
-          },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: width * 0.05,
+            vertical: height * 0.02,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(width),
+              SizedBox(height: height * 0.015),
+              _buildTodayMood(),
+              SizedBox(height: height * 0.015),
+              _buildQuoteOfTheDay(),
+              SizedBox(height: height * 0.015),
+              _buildQuickActions(width, height),
+              SizedBox(height: height * 0.02), // Bottom padding
+            ],
+          ),
         ),
       ),
     );
@@ -60,38 +59,50 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeader(double width) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               'Welcome to',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppConstants.textSecondaryColor,
-                fontSize: width * 0.045,
+                fontSize: width * 0.06,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                height: 2.0, // Responsive, minimal line height
               ),
             ),
+            SizedBox(height: width * 0.01), // Responsive space between Welcome to and app name
             Text(
               AppConstants.appName,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 color: AppConstants.textPrimaryColor,
                 fontWeight: FontWeight.bold,
-                fontSize: width * 0.07,
+                fontSize: width * 0.10,
+                letterSpacing: 1.2,
+                height: 1.0, // Responsive, minimal line height
               ),
             ),
+            SizedBox(height: width * 0.08), // Responsive space after app name
           ],
         ),
-        Container(
-          padding: EdgeInsets.all(width * 0.04),
-          decoration: BoxDecoration(
-            color: AppConstants.primaryColor,
-            borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
-            boxShadow: AppConstants.softShadow,
-          ),
-          child: Icon(
-            Icons.favorite,
-            size: width * 0.08,
-            color: AppConstants.textPrimaryColor,
+        Padding(
+          padding: EdgeInsets.only(top: width * 0.015), // Nudge icon down
+          child: Container(
+            padding: EdgeInsets.all(width * 0.04),
+            decoration: BoxDecoration(
+              color: AppConstants.primaryColor,
+              borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
+              boxShadow: AppConstants.softShadow,
+            ),
+            child: Icon(
+              Icons.favorite,
+              size: width * 0.08,
+              color: AppConstants.textPrimaryColor,
+            ),
           ),
         ),
       ],
@@ -245,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Container(
             padding: const EdgeInsets.all(AppConstants.spacingL),
             decoration: BoxDecoration(
-              color: AppConstants.secondaryColor,
+              color: const Color.fromARGB(255, 155, 39, 176),
               borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
               boxShadow: AppConstants.softShadow,
             ),
@@ -263,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       'Quote of the Day',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppConstants.textSecondaryColor,
+                        color: const Color.fromARGB(255, 162, 170, 177),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -286,10 +297,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildQuickActions(double width) {
+  Widget _buildQuickActions(double width, double height) {
+    final isMobile = width < 600;
+    final crossAxisCount = isMobile ? 2 : 4;
+    final cardAspectRatio = isMobile ? 1.1 : 1.3;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: height * 0.03), // Increased space above Quick Actions
         Text(
           'Quick Actions',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -298,21 +313,24 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: width * 0.055,
           ),
         ),
-        SizedBox(height: width * 0.03),
+        SizedBox(height: height * 0.015),
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: width > 600 ? 4 : 2,
+          crossAxisCount: crossAxisCount,
           crossAxisSpacing: width * 0.03,
-          mainAxisSpacing: width * 0.03,
-          childAspectRatio: 1.2,
+          mainAxisSpacing: height * 0.015,
+          childAspectRatio: cardAspectRatio,
           children: [
             _buildActionCard(
               icon: Icons.chat_bubble_outline,
               title: 'Chat',
               subtitle: 'Talk to AI',
               color: AppConstants.primaryColor,
-              onTap: () => _navigateToChat(),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SimpleChatScreen()),
+              ),
               width: width,
             ),
             _buildActionCard(
@@ -332,11 +350,11 @@ class _HomeScreenState extends State<HomeScreen> {
               width: width,
             ),
             _buildActionCard(
-              icon: Icons.help_outline,
-              title: 'Help',
-              subtitle: 'Get support',
+              icon: Icons.format_quote,
+              title: 'Quote',
+              subtitle: 'Get inspired',
               color: AppConstants.warningColor,
-              onTap: () => _navigateToEmergency(),
+              onTap: () => _showRandomQuote(),
               width: width,
             ),
           ],
@@ -353,10 +371,11 @@ class _HomeScreenState extends State<HomeScreen> {
     required VoidCallback onTap,
     required double width,
   }) {
+    final isMobile = width < 600;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(width * 0.04),
+        padding: EdgeInsets.all(isMobile ? width * 0.02 : width * 0.03),
         decoration: BoxDecoration(
           color: AppConstants.surfaceColor,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
@@ -366,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(width * 0.04),
+              padding: EdgeInsets.all(isMobile ? width * 0.015 : width * 0.025),
               decoration: BoxDecoration(
                 color: color.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
@@ -374,23 +393,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(
                 icon,
                 color: color,
-                size: width * 0.07,
+                size: isMobile ? width * 0.06 : width * 0.07,
               ),
             ),
-            SizedBox(height: width * 0.03),
+            SizedBox(height: isMobile ? width * 0.01 : width * 0.02),
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppConstants.textPrimaryColor,
                 fontWeight: FontWeight.w600,
-                fontSize: width * 0.045,
+                fontSize: isMobile ? width * 0.035 : width * 0.045,
               ),
+              textAlign: TextAlign.center,
             ),
             Text(
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppConstants.textSecondaryColor,
-                fontSize: width * 0.035,
+                fontSize: isMobile ? width * 0.025 : width * 0.035,
               ),
               textAlign: TextAlign.center,
             ),
@@ -410,7 +430,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToChat() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ChatScreen()),
+      MaterialPageRoute(builder: (context) => const SimpleChatScreen()),
     );
   }
 
@@ -418,6 +438,20 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const EmergencyScreen()),
+    );
+  }
+
+  void _navigateToJournal() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const JournalScreen()),
+    );
+  }
+
+  void _showRandomQuote() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const QuoteScreen()),
     );
   }
 } 

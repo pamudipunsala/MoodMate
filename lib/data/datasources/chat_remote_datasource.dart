@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../core/config/api_config.dart';
 import '../../core/constants/app_constants.dart';
 
 abstract class ChatRemoteDataSource {
@@ -17,53 +18,21 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   @override
   Future<String> sendMessage(String message) async {
-    try {
-      final response = await client.post(
-        Uri.parse('${AppConstants.openAIBaseUrl}/chat/completions'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $apiKey',
-        },
-        body: json.encode({
-          'model': AppConstants.openAIModel,
-          'messages': [
-            {
-              'role': 'system',
-              'content': 'You are a kind and emotionally supportive friend. Provide empathetic, comforting responses to help people feel better. Keep responses warm, understanding, and encouraging.',
-            },
-            {
-              'role': 'user',
-              'content': message,
-            },
-          ],
-          'max_tokens': 150,
-          'temperature': 0.7,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data['choices'][0]['message']['content'] as String;
-      } else {
-        throw Exception('Failed to get response from OpenAI');
-      }
-    } catch (e) {
-      // Fallback response for offline or error scenarios
-      return _getFallbackResponse(message);
+    // Local keyword-based AI logic (free, offline)
+    final lowerMessage = message.toLowerCase();
+    await Future.delayed(const Duration(milliseconds: 700));
+    if (lowerMessage.contains('happy') || lowerMessage.contains('good') || lowerMessage.contains('great') || lowerMessage.contains('excellent') || lowerMessage.contains('wonderful') || lowerMessage.contains('amazing')) {
+      return 'I can sense positive energy in your message! Your happiness is contagious. Keep spreading that joy! 😊';
     }
-  }
-
-  String _getFallbackResponse(String message) {
-    final fallbackResponses = [
-      "I understand you're going through a tough time. Remember, it's okay to feel this way, and you're not alone.",
-      "Thank you for sharing that with me. Your feelings are valid, and I'm here to listen.",
-      "I hear you, and I want you to know that you're doing better than you think. Take it one moment at a time.",
-      "It sounds like you're having a difficult day. Remember that this feeling won't last forever, and you have the strength to get through this.",
-      "I'm here for you. Sometimes just talking about what's on your mind can help. What else would you like to share?",
-    ];
-    
-    // Simple hash-based selection for consistent responses
-    final hash = message.hashCode.abs();
-    return fallbackResponses[hash % fallbackResponses.length];
+    if (lowerMessage.contains('sad') || lowerMessage.contains('unhappy') || lowerMessage.contains('bad') || lowerMessage.contains('terrible') || lowerMessage.contains('awful') || lowerMessage.contains('depressed') || lowerMessage.contains('miserable') || lowerMessage.contains('upset')) {
+      return 'I hear that you\'re going through a difficult time. Remember, it\'s okay to feel this way, and you\'re not alone. Your feelings are valid. 💙';
+    }
+    if (lowerMessage.contains('?') || lowerMessage.contains('why') || lowerMessage.contains('how') || lowerMessage.contains('what')) {
+      return 'That\'s an interesting question! I\'m here to help you explore your thoughts and feelings. What\'s on your mind? 🤔';
+    }
+    if (lowerMessage.contains('stress') || lowerMessage.contains('anxiety') || lowerMessage.contains('worried') || lowerMessage.contains('nervous') || lowerMessage.contains('overwhelmed')) {
+      return 'I understand stress and anxiety can be really challenging. Take a deep breath. You\'re doing better than you think. 🌸';
+    }
+    return 'Thank you for sharing that with me. I\'m here to listen and support you. How are you feeling right now? 💭';
   }
 } 

@@ -17,7 +17,15 @@ class SendMessage {
   SendMessage(this.repository);
 
   Future<ChatMessage> call(String message) async {
-    return await repository.sendMessage(message);
+    print('SendMessage UseCase: Starting to process message: "$message"');
+    try {
+      final result = await repository.sendMessage(message);
+      print('SendMessage UseCase: Successfully received response from repository');
+      return result;
+    } catch (e) {
+      print('SendMessage UseCase: Error occurred: $e');
+      rethrow;
+    }
   }
 }
 

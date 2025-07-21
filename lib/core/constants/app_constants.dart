@@ -5,22 +5,22 @@ class AppConstants {
   static const String appName = 'MoodMate';
   static const String appVersion = '1.0.0';
   
-  // Colors - Soft Pastel Palette
-  static const Color primaryColor = Color(0xFFE8F4FD); // Light Blue
-  static const Color secondaryColor = Color(0xFFF3E5F5); // Light Lavender
-  static const Color accentColor = Color(0xFFFFE5E5); // Light Blush
-  static const Color backgroundColor = Color(0xFFFAFAFA); // Very Light Gray
+  // Colors - Modern Mental Health App Palette
+  static const Color primaryColor = Color(0xFFE3F2FD); // Light pastel blue
+  static const Color secondaryColor = Color(0xFF9C27B0); // Purple
+  static const Color accentColor = Color(0xFFFF6B9D); // Pink
+  static const Color backgroundColor = Color(0xFFF8F9FF); // Very Light Blue Gray
   static const Color surfaceColor = Color(0xFFFFFFFF); // White
-  static const Color textPrimaryColor = Color(0xFF2C3E50); // Dark Blue Gray
-  static const Color textSecondaryColor = Color(0xFF7F8C8D); // Gray
-  static const Color successColor = Color(0xFFA8E6CF); // Light Green
-  static const Color warningColor = Color(0xFFFFD3B6); // Light Orange
-  static const Color errorColor = Color(0xFFFFB3BA); // Light Red
+  static const Color textPrimaryColor = Color(0xFF1A1A2E); // Dark Blue
+  static const Color textSecondaryColor = Color(0xFF6C757D); // Medium Gray
+  static const Color successColor = Color(0xFF4CAF50); // Green
+  static const Color warningColor = Color(0xFFFF9800); // Orange
+  static const Color errorColor = Color(0xFFF44336); // Red
   
-  // Mood Colors
-  static const Color sadColor = Color(0xFFB8E6B8); // Light Blue
-  static const Color neutralColor = Color(0xFFFFE5B4); // Light Yellow
-  static const Color happyColor = Color(0xFFFFB3BA); // Light Pink
+  // Mood Colors - More Vibrant
+  static const Color sadColor = Color(0xFF2196F3); // Blue
+  static const Color neutralColor = Color(0xFFFFC107); // Amber
+  static const Color happyColor = Color(0xFF4CAF50); // Green
   
   // Typography
   static const String fontFamily = 'Nunito';
@@ -69,6 +69,7 @@ class AppConstants {
   // API Configuration
   static const String openAIBaseUrl = 'https://api.openai.com/v1';
   static const String openAIModel = 'gpt-3.5-turbo';
+  static const String openAIApiKey = 'sk-REPLACE_WITH_YOUR_KEY'; // <-- Set your OpenAI API key here
   
   // Storage Keys
   static const String moodEntriesKey = 'mood_entries';
@@ -76,6 +77,6 @@ class AppConstants {
   static const String userPreferencesKey = 'user_preferences';
   
   // Emergency Resources
-  static const String emergencyHotline = '988'; // US National Suicide Prevention Lifeline
+  static const String emergencyHotline = '1926'; // US National Suicide Prevention Lifeline
   static const String emergencyText = 'Text HOME to 741741'; // Crisis Text Line
 } 

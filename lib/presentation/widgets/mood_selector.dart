@@ -14,6 +14,8 @@ class MoodSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Text(
@@ -21,9 +23,10 @@ class MoodSelector extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             color: AppConstants.textPrimaryColor,
             fontWeight: FontWeight.w600,
+            fontSize: width * 0.05,
           ),
         ),
-        const SizedBox(height: AppConstants.spacingL),
+        SizedBox(height: height * 0.02),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: MoodType.values.map((mood) {
@@ -87,14 +90,16 @@ class _MoodOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppConstants.animationMedium,
-        padding: const EdgeInsets.all(AppConstants.spacingM),
+        padding: EdgeInsets.all(width * 0.04),
         decoration: BoxDecoration(
           color: _backgroundColor,
-          borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
+          borderRadius: BorderRadius.circular(width * 0.04),
           boxShadow: isSelected ? AppConstants.mediumShadow : AppConstants.softShadow,
         ),
         child: Column(
@@ -102,14 +107,15 @@ class _MoodOption extends StatelessWidget {
           children: [
             Text(
               _emoji,
-              style: const TextStyle(fontSize: 48),
+              style: TextStyle(fontSize: width * 0.12),
             ),
-            const SizedBox(height: AppConstants.spacingS),
+            SizedBox(height: height * 0.01),
             Text(
               _label,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppConstants.textPrimaryColor,
                 fontWeight: FontWeight.w600,
+                fontSize: width * 0.04,
               ),
             ),
           ],

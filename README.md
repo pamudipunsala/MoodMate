@@ -37,6 +37,7 @@ The app follows Clean Architecture principles with the following structure:
 lib/
 ├── core/
 │   ├── constants/     # App constants and configuration
+│   ├── config/        # API configuration
 │   └── theme/         # App theme and styling
 ├── data/
 │   ├── datasources/   # Data sources (local/remote)
@@ -80,15 +81,47 @@ The app uses **BLoC (Business Logic Component)** pattern for state management:
    flutter pub get
    ```
 
-3. **Configure OpenAI API (Optional)**
-   - Get an OpenAI API key from [OpenAI Platform](https://platform.openai.com/)
-   - Replace `'your-openai-api-key-here'` in `lib/main.dart` with your actual API key
-   - If no API key is provided, the app will use fallback responses
+3. **Configure OpenAI API (Required for AI Chat)**
+   
+   **Option 1: Direct Configuration**
+   - Open `lib/core/config/api_config.dart`
+   - Replace `'your-openai-api-key-here'` with your actual OpenAI API key
+   - Get an API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+   
+   **Option 2: Environment Variable (Recommended)**
+   - Run the app with your API key as an environment variable:
+   ```bash
+   flutter run --dart-define=OPENAI_API_KEY=sk-your-actual-api-key-here
+   ```
+   
+   **Option 3: Fallback Mode**
+   - If no API key is configured, the app will use empathetic fallback responses
+   - The chat will still work but won't use real AI responses
 
 4. **Run the app**
    ```bash
    flutter run
    ```
+
+### API Key Setup
+
+To enable AI-powered chat responses:
+
+1. **Get an OpenAI API Key:**
+   - Visit [OpenAI Platform](https://platform.openai.com/)
+   - Sign up or log in to your account
+   - Go to "API Keys" section
+   - Create a new API key
+   - Copy the key (starts with `sk-`)
+
+2. **Configure the API Key:**
+   - **Method 1:** Edit `lib/core/config/api_config.dart` and replace the placeholder
+   - **Method 2:** Use environment variable when running: `flutter run --dart-define=OPENAI_API_KEY=your-key`
+
+3. **Test the Integration:**
+   - Open the app and go to the Chat section
+   - Send a message to test if AI responses are working
+   - Check the console logs for any API errors
 
 ### Dependencies
 
@@ -129,34 +162,41 @@ The app uses the following key dependencies:
 The app integrates with OpenAI's GPT-3.5-turbo model for empathetic chat responses. The API configuration includes:
 
 - **Model**: gpt-3.5-turbo
-- **Max Tokens**: 150
+- **Max Tokens**: 200
 - **Temperature**: 0.7
-- **System Prompt**: "You are a kind and emotionally supportive friend. Provide empathetic, comforting responses to help people feel better. Keep responses warm, understanding, and encouraging."
+- **System Prompt**: Configured for emotional support and empathy
+
+### Error Handling
+The app includes robust error handling for API issues:
+- **Invalid API Key**: Shows helpful error message
+- **Rate Limiting**: Graceful fallback to offline responses
+- **Network Issues**: Automatic fallback to local responses
+- **API Errors**: Detailed logging for debugging
 
 ### Fallback Responses
-If the API is unavailable or no API key is provided, the app uses predefined empathetic responses to ensure users always receive support.
+When the API is unavailable, the app provides empathetic fallback responses that maintain the supportive tone of the conversation.
 
-## Emergency Resources
+## Troubleshooting
 
-The app includes access to:
-- **National Suicide Prevention Lifeline**: 988
-- **Crisis Text Line**: Text HOME to 741741
-- **Emergency Services**: 911
+### Chat Not Working
+1. **Check API Key**: Ensure your OpenAI API key is properly configured
+2. **Check Console Logs**: Look for API error messages in the debug console
+3. **Test API Key**: Verify your API key works on the OpenAI platform
+4. **Check Network**: Ensure you have internet connectivity
 
-## Local Storage
-
-The app uses SharedPreferences for local data storage:
-- Mood entries with timestamps and notes
-- Chat message history
-- User preferences
+### Common Issues
+- **"Invalid API key"**: Update your API key in the configuration
+- **"Rate limit exceeded"**: Wait a few minutes and try again
+- **"Network error"**: Check your internet connection
+- **Empty responses**: The app will use fallback responses automatically
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
 ## License
 

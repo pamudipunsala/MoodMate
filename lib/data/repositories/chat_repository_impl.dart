@@ -30,6 +30,8 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<ChatMessage> sendMessage(String message) async {
+    print('ChatRepository: Starting to send message: "$message"');
+    
     // Save user message
     final userMessage = ChatMessage(
       id: uuid.v4(),
@@ -37,10 +39,13 @@ class ChatRepositoryImpl implements ChatRepository {
       type: MessageType.user,
       timestamp: DateTime.now(),
     );
+    print('ChatRepository: Saving user message with ID: ${userMessage.id}');
     await saveChatMessage(userMessage);
 
     // Get AI response
+    print('ChatRepository: Calling remote data source for AI response...');
     final aiResponse = await remoteDataSource.sendMessage(message);
+    print('ChatRepository: Received AI response: "$aiResponse"');
     
     // Save AI message
     final aiMessage = ChatMessage(
@@ -49,8 +54,10 @@ class ChatRepositoryImpl implements ChatRepository {
       type: MessageType.ai,
       timestamp: DateTime.now(),
     );
+    print('ChatRepository: Saving AI message with ID: ${aiMessage.id}');
     await saveChatMessage(aiMessage);
 
+    print('ChatRepository: Returning AI message');
     return aiMessage;
   }
 

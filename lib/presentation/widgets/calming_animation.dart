@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
 
 class CalmingAnimation extends StatefulWidget {
-  const CalmingAnimation({super.key});
+  final Color? heartColor;
+  final Color? circleColor;
+  const CalmingAnimation({super.key, this.heartColor, this.circleColor});
 
   @override
   State<CalmingAnimation> createState() => _CalmingAnimationState();
@@ -62,6 +64,8 @@ class _CalmingAnimationState extends State<CalmingAnimation>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Column(
@@ -73,19 +77,19 @@ class _CalmingAnimationState extends State<CalmingAnimation>
               return Transform.scale(
                 scale: _breathingAnimation.value,
                 child: Container(
-                  width: 200,
-                  height: 200,
+                  width: width * 0.5,
+                  height: width * 0.5,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        AppConstants.primaryColor.withOpacity(0.3),
-                        AppConstants.primaryColor.withOpacity(0.1),
+                        widget.circleColor ?? AppConstants.primaryColor.withOpacity(0.3),
+                        (widget.circleColor ?? AppConstants.primaryColor).withOpacity(0.1),
                       ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppConstants.primaryColor.withOpacity(0.2),
+                        color: (widget.circleColor ?? AppConstants.primaryColor).withOpacity(0.2),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -94,28 +98,30 @@ class _CalmingAnimationState extends State<CalmingAnimation>
                   child: Center(
                     child: Icon(
                       Icons.favorite,
-                      size: 80,
-                      color: AppConstants.primaryColor,
+                      size: width * 0.2,
+                      color: widget.heartColor ?? AppConstants.primaryColor,
                     ),
                   ),
                 ),
               );
             },
           ),
-          const SizedBox(height: AppConstants.spacingXL),
+          SizedBox(height: height * 0.03),
           Text(
             'Breathe in... Breathe out...',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: AppConstants.textPrimaryColor,
               fontWeight: FontWeight.w500,
+              fontSize: width * 0.05,
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: AppConstants.spacingM),
+          SizedBox(height: height * 0.015),
           Text(
             'Focus on your breath and let your mind rest',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppConstants.textSecondaryColor,
+              fontSize: width * 0.04,
             ),
             textAlign: TextAlign.center,
           ),

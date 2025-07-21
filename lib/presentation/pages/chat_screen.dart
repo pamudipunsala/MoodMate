@@ -25,7 +25,7 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
 
   String _getAIReply(String message) {
     final lower = message.toLowerCase();
-    if (lower.contains('happy') || lower.contains('joy') || lower.contains('excited') || lower.contains('great')) {
+    if (lower.contains('happy') || lower.contains('joy') || lower.contains('excited') || lower.contains('great') || lower.contains('fine')) {
       return 'I can sense positive energy! 😊 That’s wonderful!';
     } else if (lower.contains('won') || lower.contains('promotion') || lower.contains('success') || lower.contains('passed') || lower.contains('accomplished') || lower.contains('proud') || lower.contains('improved')) {
       return 'Congratulations on your achievement! 🎉 You should be proud of yourself!';
@@ -35,8 +35,8 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
       return 'That sounds like a lovely experience! I’m glad you had a good time.';
     } else if (lower.contains('motivated') || lower.contains('inspired')) {
       return 'That’s awesome! Keep up the positive energy!';
-    } else if (lower.contains('sad') || lower.contains('down') || lower.contains('unhappy') || lower.contains('depressed')) {
-      return 'I hear that you’re feeling sad. Remember, it’s okay to feel this way. I’m here for you.';
+    } else if (lower.contains('sad') || lower.contains('down') || lower.contains('unhappy') || lower.contains('depressed') || lower.contains('bad') || lower.contains('worst') || lower.contains('miserable')) {
+      return 'I hear that you’re feeling down. Remember, it’s okay to feel this way. I’m here for you.';
     } else if (lower.contains('anxious') || lower.contains('nervous') || lower.contains('worried') || lower.contains('scared')) {
       return 'Anxiety can be tough. Try taking a few deep breaths. I’m here for you.';
     } else if (lower.contains('angry') || lower.contains('mad') || lower.contains('frustrated')) {
@@ -100,7 +100,7 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
         elevation: 0,
       ),
       body: Column(
-        children: [
+          children: [
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(width * 0.04),
@@ -129,24 +129,24 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
                         color: isUser ? AppConstants.textPrimaryColor : AppConstants.textSecondaryColor,
                         fontSize: width * 0.035,
                       ),
-                    ),
-                  ),
-                );
-              },
+                        ),
+                      ),
+                    );
+                },
+              ),
             ),
-          ),
-          Container(
-            color: AppConstants.surfaceColor,
+            Container(
+              color: AppConstants.surfaceColor,
             padding: EdgeInsets.symmetric(
               horizontal: width * 0.02,
               vertical: height * 0.01,
             ),
             child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
+                    children: [
+                      Expanded(
+                          child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(
+                            decoration: InputDecoration(
                       hintText: 'Type your message...',
                       hintStyle: TextStyle(
                         fontSize: width * 0.035,
@@ -170,12 +170,13 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
                     Icons.send,
                     size: width * 0.06,
                   ),
-                  color: AppConstants.primaryColor,
+                  color: const Color.fromARGB(255, 56, 117, 173), // Deep purple for better visibility
                   onPressed: _sendMessage,
-                ),
-              ],
             ),
-          ),
+          ],
+        ),
+      ),
+          SizedBox(height: height * 0.02), // Add space at the bottom
         ],
       ),
     );

@@ -55,7 +55,7 @@ class EmergencyScreen extends StatelessWidget {
         ),
         SizedBox(height: height * 0.02),
         CalmingAnimation(
-          heartColor: const Color(0xFF6A1B9A), // Deep purple
+          heartColor: const Color.fromARGB(255, 154, 27, 126), // Deep purple
           circleColor: const Color(0xFF8E24AA).withOpacity(0.3), // Visible purple
         ),
       ],
@@ -86,7 +86,7 @@ class EmergencyScreen extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(width * 0.04),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(226, 160, 54, 179),
+            color: Color(0xFFF3E6F9), // very light pastel purple
             borderRadius: BorderRadius.circular(width * 0.04),
             boxShadow: AppConstants.softShadow,
           ),
@@ -95,14 +95,14 @@ class EmergencyScreen extends StatelessWidget {
               return Padding(
                 padding: EdgeInsets.only(bottom: height * 0.015),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center, // <-- Center vertically
                   children: [
                     Icon(
                       Icons.favorite,
                       size: width * 0.04,
-                      color: const Color.fromARGB(197, 150, 12, 58),
+                      color: const Color.fromARGB(197, 187, 36, 86),
                     ),
-                    SizedBox(width: width * 0.02),
+                    SizedBox(width: width * 0.02), // Less space between icon and text
                     Expanded(
                       child: Text(
                         affirmation,
@@ -147,16 +147,16 @@ class EmergencyScreen extends StatelessWidget {
           height: height,
         ),
         SizedBox(height: height * 0.015),
-        _buildEmergencyCard(
-          context,
-          title: 'Crisis Text Line',
-          subtitle: AppConstants.emergencyText,
-          icon: Icons.message,
-          color: AppConstants.warningColor,
-          onTap: () => _openCrisisTextLine(context),
-          width: width,
-          height: height,
-        ),
+        // _buildEmergencyCard(
+        //   context,
+        //   title: 'Crisis Text Line',
+        //   subtitle: AppConstants.emergencyText,
+        //   icon: Icons.message,
+        //   color: AppConstants.warningColor,
+        //   onTap: () => _openCrisisTextLine(context),
+        //   width: width,
+        //   height: height,
+        // ),
         SizedBox(height: height * 0.015),
         _buildEmergencyCard(
           context,
@@ -172,7 +172,7 @@ class EmergencyScreen extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(width * 0.04),
           decoration: BoxDecoration(
-            color: AppConstants.primaryColor.withOpacity(0.3),
+            color: Color(0xFFE6F4EA), // very light pastel green
             borderRadius: BorderRadius.circular(width * 0.02),
             border: Border.all(
               color: AppConstants.primaryColor.withOpacity(0.5),
@@ -301,9 +301,9 @@ class EmergencyScreen extends StatelessWidget {
     _showConfirmationDialog(
       context,
       title: 'Call Emergency Services',
-      content: 'This will call 911. Only use this if you are in immediate danger. Are you sure?',
+      content: 'This will call 119. Only use this if you are in immediate danger. Are you sure?',
       onConfirm: () {
-        _makePhoneCall('tel:911');
+        _makePhoneCall('tel:119');
       },
     );
   }

@@ -7,12 +7,10 @@ import '../models/chat_message_model.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
   final ChatLocalDataSource localDataSource;
-  final ChatRemoteDataSource remoteDataSource;
   final Uuid uuid;
 
   ChatRepositoryImpl({
     required this.localDataSource,
-    required this.remoteDataSource,
     required this.uuid,
   });
 
@@ -31,7 +29,6 @@ class ChatRepositoryImpl implements ChatRepository {
   @override
   Future<ChatMessage> sendMessage(String message) async {
     print('ChatRepository: Starting to send message: "$message"');
-    
     // Save user message
     final userMessage = ChatMessage(
       id: uuid.v4(),
@@ -42,11 +39,10 @@ class ChatRepositoryImpl implements ChatRepository {
     print('ChatRepository: Saving user message with ID: ${userMessage.id}');
     await saveChatMessage(userMessage);
 
-    // Get AI response
-    print('ChatRepository: Calling remote data source for AI response...');
-    final aiResponse = await remoteDataSource.sendMessage(message);
-    print('ChatRepository: Received AI response: "$aiResponse"');
-    
+    // Get AI response using local logic (simulate AI)
+    final aiResponse = _getLocalAIReply(message);
+    print('ChatRepository: Local AI response: "$aiResponse"');
+
     // Save AI message
     final aiMessage = ChatMessage(
       id: uuid.v4(),
@@ -59,6 +55,12 @@ class ChatRepositoryImpl implements ChatRepository {
 
     print('ChatRepository: Returning AI message');
     return aiMessage;
+  }
+
+  String _getLocalAIReply(String message) {
+    // You can call your expanded keyword logic here, or delegate to a helper
+    // For now, just a fallback
+    return 'Thank you for sharing. I’m here to listen.';
   }
 
   @override

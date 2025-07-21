@@ -9,8 +9,8 @@ class AppConstants {
   static const Color primaryColor = Color(0xFFE3F2FD); // Light pastel blue
   static const Color secondaryColor = Color(0xFF9C27B0); // Purple
   static const Color accentColor = Color(0xFFFF6B9D); // Pink
-  static const Color backgroundColor = Color(0xFFF8F9FF); // Very Light Blue Gray
-  static const Color surfaceColor = Color(0xFFFFFFFF); // White
+  static const Color backgroundColor = Color(0xF2F7F8FC); // lighter with alpha
+  static const Color surfaceColor = Color(0xE6FFFFFF);    // lighter white with alpha
   static const Color textPrimaryColor = Color(0xFF1A1A2E); // Dark Blue
   static const Color textSecondaryColor = Color(0xFF6C757D); // Medium Gray
   static const Color successColor = Color(0xFF4CAF50); // Green

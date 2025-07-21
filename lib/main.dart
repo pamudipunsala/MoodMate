@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/theme/app_theme.dart';
-import 'core/config/api_config.dart';
 
 // Data Sources
 import 'data/datasources/mood_local_datasource.dart';
@@ -72,17 +71,11 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatBloc>(
           create: (context) {
             final chatLocalDataSource = ChatLocalDataSourceImpl(sharedPreferences);
-            
-            final chatRemoteDataSource = ChatRemoteDataSourceImpl(
-              client: http.Client(),
-              apiKey: ApiConfig.huggingFaceApiKey,
-            );
+            // Only use the local data source, remove remoteDataSource
             final chatRepository = ChatRepositoryImpl(
               localDataSource: chatLocalDataSource,
-              remoteDataSource: chatRemoteDataSource,
               uuid: Uuid(),
             );
-            
             return ChatBloc(
               getChatHistory: chat_usecases.GetChatHistory(chatRepository),
               sendMessage: chat_usecases.SendMessage(chatRepository),

@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:moodmate/presentation/pages/home_screen.dart';
 import '../../core/constants/app_constants.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Increase the duration here (e.g., 3 seconds)
+    Future.delayed(const Duration(seconds: 3), () {
+      // Navigate to your main screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +35,11 @@ class SplashScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.favorite,
-                  size: width * 0.18, // Responsive icon size
-                  color: AppConstants.textPrimaryColor,
+                Image.asset(
+                  'assets/images/app_icon.png',
+                  width: width * 0.18,
+                  height: width * 0.18,
+                  fit: BoxFit.contain,
                 ),
                 SizedBox(height: height * 0.04),
                 Text(
@@ -27,7 +47,7 @@ class SplashScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
                     color: AppConstants.textPrimaryColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: width * 0.08, // Responsive font size
+                    fontSize: width * 0.08,
                   ),
                 ),
                 SizedBox(height: height * 0.02),
@@ -35,7 +55,7 @@ class SplashScreen extends StatelessWidget {
                   "Emotional Support, Anytime",
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: AppConstants.textSecondaryColor,
-                    fontSize: width * 0.045, // Responsive font size
+                    fontSize: width * 0.045,
                   ),
                 ),
               ],

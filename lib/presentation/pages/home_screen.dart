@@ -4,11 +4,9 @@ import '../../core/constants/app_constants.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../bloc/mood/mood_bloc.dart';
 import '../bloc/quotes/quotes_bloc.dart';
-import '../widgets/mood_selector.dart';
 import 'mood_checkin_screen.dart';
 import 'chat_screen.dart';
 import 'emergency_screen.dart';
-import 'journal_screen.dart';
 import 'quote_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -72,10 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: width * 0.06,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 0.5,
-                height: 2.0, // Responsive, minimal line height
+                height: 1.0, // Responsive, minimal line height
               ),
             ),
-            SizedBox(height: width * 0.01), // Responsive space between Welcome to and app name
+            SizedBox(height: width * 0.01),
             Text(
               AppConstants.appName,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
@@ -86,23 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 1.0, // Responsive, minimal line height
               ),
             ),
-            SizedBox(height: width * 0.08), // Responsive space after app name
+            SizedBox(height: width * 0.08),
           ],
         ),
         Padding(
-          padding: EdgeInsets.only(top: width * 0.015), // Nudge icon down
-          child: Container(
-            padding: EdgeInsets.all(width * 0.04),
-            decoration: BoxDecoration(
-              color: AppConstants.primaryColor,
-              borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
-              boxShadow: AppConstants.softShadow,
-            ),
-            child: Icon(
-              Icons.favorite,
-              size: width * 0.08,
-              color: AppConstants.textPrimaryColor,
-            ),
+          padding: EdgeInsets.only(top: width * 0.0005), // Nudge icon down
+          child: Image.asset(
+            'assets/images/app_icon.png',
+            width: width * 0.2,
+            height: width * 0.2,
+            fit: BoxFit.contain,
           ),
         ),
       ],
@@ -147,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
-        color: color,
+        color: Color(0xFFE6F4EA), // very light pastel green
         borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
         boxShadow: AppConstants.softShadow,
       ),
@@ -256,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return Container(
             padding: const EdgeInsets.all(AppConstants.spacingL),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 155, 39, 176),
+              color: Color(0xFFF3E6F9), // very light pastel purple
               borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
               boxShadow: AppConstants.softShadow,
             ),
@@ -438,13 +429,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const EmergencyScreen()),
-    );
-  }
-
-  void _navigateToJournal() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const JournalScreen()),
     );
   }
 

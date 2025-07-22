@@ -90,113 +90,124 @@ class _QuoteScreenState extends State<QuoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Motivational Quote'),
-        backgroundColor: AppConstants.primaryColor,
-        foregroundColor: AppConstants.textPrimaryColor,
-        elevation: 0,
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFFAFAFF), Color(0xFFE8F4FD)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Motivational Quote'),
+            backgroundColor: AppConstants.primaryColor,
+            foregroundColor: AppConstants.textPrimaryColor,
+            elevation: 0,
           ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.format_quote, size: 72, color: AppConstants.warningColor.withOpacity(0.7)),
-                const SizedBox(height: 2), // Reduced top space
-                Card(
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusXL),
-                  ),
-                  color: Colors.white.withOpacity(0.97),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 56),
-                    child: Column(
-                      children: [
-                        Text(
-                          _currentQuote,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            color: AppConstants.textPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                            height: 1.3,
-                          ),
-                          textAlign: TextAlign.center,
+          body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFFFAFAFF), Color(0xFFE8F4FD)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(width * 0.04),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.format_quote, size: width * 0.18, color: AppConstants.warningColor.withOpacity(0.7)),
+                    SizedBox(height: height * 0.01),
+                    Card(
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(width * 0.04),
+                      ),
+                      color: Colors.white.withOpacity(0.97),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.08, vertical: height * 0.07),
+                        child: Column(
+                          children: [
+                            Text(
+                              _currentQuote,
+                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: AppConstants.textPrimaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                                height: 1.3,
+                                fontSize: width * 0.045,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: height * 0.02),
+                            Text(
+                              "— MoodMate",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: AppConstants.textSecondaryColor,
+                                fontStyle: FontStyle.italic,
+                                fontSize: width * 0.035,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          "— MoodMate",
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: AppConstants.textSecondaryColor,
-                            fontStyle: FontStyle.italic,
-                          ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.04),
+                    // Daily affirmation
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.04, vertical: height * 0.018),
+                      decoration: BoxDecoration(
+                        color: AppConstants.successColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(width * 0.03),
+                      ),
+                      child: Text(
+                        "Affirmation: You are enough, just as you are.",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppConstants.successColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: width * 0.035,
                         ),
-                      ],
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppConstants.primaryColor,
-                    foregroundColor: AppConstants.textPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+                    SizedBox(height: height * 0.03),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 228, 153, 41),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(width * 0.03),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: height * 0.018),
+                      ),
+                      onPressed: _nextQuote,
+                      icon: const Icon(Icons.refresh),
+                      label: Text('Next', style: TextStyle(fontSize: width * 0.04)),
                     ),
-                  ),
-                  onPressed: () {
-                    Share.share('"$_currentQuote" — MoodMate');
-                  },
-                  icon: const Icon(Icons.share),
-                  label: const Text('Share'),
-                ),
-                const SizedBox(height: 28),
-                // Daily affirmation
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: AppConstants.successColor.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
-                  ),
-                  child: Text(
-                    "Affirmation: You are enough, just as you are.",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppConstants.successColor,
-                      fontWeight: FontWeight.w600,
+                    SizedBox(height: height * 0.02),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 202, 102, 135),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(width * 0.03),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.06, vertical: height * 0.018),
+                      ),
+                      onPressed: () {
+                        Share.share('"$_currentQuote" — MoodMate');
+                      },
+                      icon: const Icon(Icons.share),
+                      label: Text('Share', style: TextStyle(fontSize: width * 0.04)),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 28),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppConstants.warningColor,
-                    foregroundColor: AppConstants.textPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
-                    ),
-                  ),
-                  onPressed: _nextQuote,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Next'),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 } 

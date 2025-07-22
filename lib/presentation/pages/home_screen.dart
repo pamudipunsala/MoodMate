@@ -31,24 +31,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: width * 0.05,
-            vertical: height * 0.02,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(width),
-              SizedBox(height: height * 0.015),
-              _buildTodayMood(),
-              SizedBox(height: height * 0.015),
-              _buildQuoteOfTheDay(),
-              SizedBox(height: height * 0.015),
-              _buildQuickActions(width, height),
-              SizedBox(height: height * 0.02), // Bottom padding
-            ],
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final w = constraints.maxWidth;
+            final h = constraints.maxHeight;
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: w * 0.05,
+                vertical: h * 0.02,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(w),
+                  SizedBox(height: h * 0.015),
+                  _buildTodayMood(),
+                  SizedBox(height: h * 0.015),
+                  _buildQuoteOfTheDay(),
+                  SizedBox(height: h * 0.015),
+                  _buildQuickActions(w, h),
+                  SizedBox(height: h * 0.02), // Bottom padding
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -289,13 +295,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuickActions(double width, double height) {
-    final isMobile = width < 600;
-    final crossAxisCount = isMobile ? 2 : 4;
-    final cardAspectRatio = isMobile ? 1.1 : 1.3;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: height * 0.03), // Increased space above Quick Actions
+        SizedBox(height: height * 0.03),
         Text(
           'Quick Actions',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -308,10 +311,10 @@ class _HomeScreenState extends State<HomeScreen> {
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: crossAxisCount,
+          crossAxisCount: 2, // Always 2 columns
           crossAxisSpacing: width * 0.03,
           mainAxisSpacing: height * 0.015,
-          childAspectRatio: cardAspectRatio,
+          childAspectRatio: 1.1, // Adjust for squareness
           children: [
             _buildActionCard(
               icon: Icons.chat_bubble_outline,
@@ -323,6 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 MaterialPageRoute(builder: (context) => const SimpleChatScreen()),
               ),
               width: width,
+              height: height,
             ),
             _buildActionCard(
               icon: Icons.favorite_outline,
@@ -331,6 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppConstants.accentColor,
               onTap: () => _navigateToEmergency(),
               width: width,
+              height: height,
             ),
             _buildActionCard(
               icon: Icons.emoji_emotions_outlined,
@@ -339,6 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppConstants.secondaryColor,
               onTap: () => _navigateToMoodCheckin(),
               width: width,
+              height: height,
             ),
             _buildActionCard(
               icon: Icons.format_quote,
@@ -347,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: AppConstants.warningColor,
               onTap: () => _showRandomQuote(),
               width: width,
+              height: height,
             ),
           ],
         ),
@@ -361,12 +368,14 @@ class _HomeScreenState extends State<HomeScreen> {
     required Color color,
     required VoidCallback onTap,
     required double width,
+    required double height,
   }) {
-    final isMobile = width < 600;
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(isMobile ? width * 0.02 : width * 0.03),
+        width: width,
+        height: height,
+        padding: EdgeInsets.all(width * 0.03),
         decoration: BoxDecoration(
           color: AppConstants.surfaceColor,
           borderRadius: BorderRadius.circular(AppConstants.borderRadiusL),
@@ -376,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(isMobile ? width * 0.015 : width * 0.025),
+              padding: EdgeInsets.all(width * 0.025),
               decoration: BoxDecoration(
                 color: color.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
@@ -384,16 +393,16 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(
                 icon,
                 color: color,
-                size: isMobile ? width * 0.06 : width * 0.07,
+                size: width * 0.07,
               ),
             ),
-            SizedBox(height: isMobile ? width * 0.01 : width * 0.02),
+            SizedBox(height: width * 0.02),
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppConstants.textPrimaryColor,
                 fontWeight: FontWeight.w600,
-                fontSize: isMobile ? width * 0.035 : width * 0.045,
+                fontSize: width * 0.045,
               ),
               textAlign: TextAlign.center,
             ),
@@ -401,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: AppConstants.textSecondaryColor,
-                fontSize: isMobile ? width * 0.025 : width * 0.035,
+                fontSize: width * 0.035,
               ),
               textAlign: TextAlign.center,
             ),

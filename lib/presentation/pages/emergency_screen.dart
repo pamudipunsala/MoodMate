@@ -52,37 +52,41 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Emergency Resources',
-          style: TextStyle(
-            fontSize: width * 0.05,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: AppConstants.primaryColor,
-        foregroundColor: AppConstants.textPrimaryColor,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: _loadingHotlines
-            ? Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: EdgeInsets.all(width * 0.04),
-                child: Column(
-                  children: [
-                    _buildCalmingSection(width, height),
-                    SizedBox(height: height * 0.03),
-                    _buildAffirmationsSection(width, height),
-                    SizedBox(height: height * 0.03),
-                    _buildEmergencyResourcesSection(context, width, height),
-                  ],
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Emergency Resources',
+              style: TextStyle(
+                fontSize: width * 0.05,
+                fontWeight: FontWeight.w600,
               ),
-      ),
+            ),
+            backgroundColor: AppConstants.primaryColor,
+            foregroundColor: AppConstants.textPrimaryColor,
+            elevation: 0,
+          ),
+          body: SafeArea(
+            child: _loadingHotlines
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    padding: EdgeInsets.all(width * 0.04),
+                    child: Column(
+                      children: [
+                        _buildCalmingSection(width, height),
+                        SizedBox(height: height * 0.03),
+                        _buildAffirmationsSection(width, height),
+                        SizedBox(height: height * 0.03),
+                        _buildEmergencyResourcesSection(context, width, height),
+                      ],
+                    ),
+                  ),
+          ),
+        );
+      },
     );
   }
 

@@ -84,120 +84,124 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Chat',
-          style: TextStyle(
-            fontSize: width * 0.05,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: AppConstants.primaryColor,
-        foregroundColor: AppConstants.textPrimaryColor,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.only(top: height * 0.01, left: width * 0.04, right: width * 0.04, bottom: height * 0.01),
-            padding: EdgeInsets.symmetric(vertical: height * 0.012, horizontal: width * 0.03),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.10),
-              borderRadius: BorderRadius.circular(width * 0.02),
-              border: Border.all(color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.3)),
-            ),
-            child: Text(
-              'Note: This chat is only responsive for emotions and feelings-related messages.',
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Chat',
               style: TextStyle(
-                color: const Color.fromARGB(255, 108, 153, 185),
-                fontSize: width * 0.035,
-                fontWeight: FontWeight.w500,
+                fontSize: width * 0.05,
+                fontWeight: FontWeight.w600,
               ),
-              textAlign: TextAlign.center,
             ),
+            backgroundColor: AppConstants.primaryColor,
+            foregroundColor: AppConstants.textPrimaryColor,
+            elevation: 0,
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(width * 0.04),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final msg = _messages[index];
-                final isUser = msg['role'] == 'user';
-                return Align(
-                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: height * 0.005),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.04,
-                      vertical: height * 0.012,
-                    ),
-                    constraints: BoxConstraints(
-                      maxWidth: width * 0.75,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isUser ? AppConstants.primaryColor : AppConstants.surfaceColor,
-                      borderRadius: BorderRadius.circular(width * 0.04),
-                    ),
-                    child: Text(
-                      msg['content'] ?? '',
-                      style: TextStyle(
-                        color: isUser ? AppConstants.textPrimaryColor : AppConstants.textSecondaryColor,
-                        fontSize: width * 0.035,
-                      ),
+          body: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(top: height * 0.01, left: width * 0.04, right: width * 0.04, bottom: height * 0.01),
+                padding: EdgeInsets.symmetric(vertical: height * 0.012, horizontal: width * 0.03),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.10),
+                  borderRadius: BorderRadius.circular(width * 0.02),
+                  border: Border.all(color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.3)),
+                ),
+                child: Text(
+                  'Note: This chat is only responsive for emotions and feelings-related messages.',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 108, 153, 185),
+                    fontSize: width * 0.035,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.all(width * 0.04),
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) {
+                    final msg = _messages[index];
+                    final isUser = msg['role'] == 'user';
+                    return Align(
+                      alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: height * 0.005),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: width * 0.04,
+                          vertical: height * 0.012,
+                        ),
+                        constraints: BoxConstraints(
+                          maxWidth: width * 0.75,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isUser ? AppConstants.primaryColor : AppConstants.surfaceColor,
+                          borderRadius: BorderRadius.circular(width * 0.04),
+                        ),
+                        child: Text(
+                          msg['content'] ?? '',
+                          style: TextStyle(
+                            color: isUser ? AppConstants.textPrimaryColor : AppConstants.textSecondaryColor,
+                            fontSize: width * 0.035,
+                          ),
                         ),
                       ),
                     );
-                },
+                  },
+                ),
               ),
-            ),
-            Container(
-              color: AppConstants.surfaceColor,
-            padding: EdgeInsets.symmetric(
-              horizontal: width * 0.02,
-              vertical: height * 0.01,
-            ),
-            child: Row(
-                    children: [
-                      Expanded(
-                          child: TextField(
-                    controller: _controller,
-                            decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                      hintStyle: TextStyle(
-                        fontSize: width * 0.035,
-                        color: AppConstants.textSecondaryColor,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(width * 0.02),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: width * 0.03,
-                        vertical: height * 0.012,
+              Container(
+                color: AppConstants.surfaceColor,
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.02,
+                  vertical: height * 0.01,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        decoration: InputDecoration(
+                          hintText: 'Type your message...',
+                          hintStyle: TextStyle(
+                            fontSize: width * 0.035,
+                            color: AppConstants.textSecondaryColor,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(width * 0.02),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: width * 0.03,
+                            vertical: height * 0.012,
+                          ),
+                        ),
+                        style: TextStyle(fontSize: width * 0.035),
+                        onSubmitted: (_) => _sendMessage(),
                       ),
                     ),
-                    style: TextStyle(fontSize: width * 0.035),
-                    onSubmitted: (_) => _sendMessage(),
-                  ),
+                    SizedBox(width: width * 0.02),
+                    IconButton(
+                      icon: Icon(
+                        Icons.send,
+                        size: width * 0.06,
+                      ),
+                      color: const Color.fromARGB(255, 56, 117, 173), // Deep purple for better visibility
+                      onPressed: _sendMessage,
+                    ),
+                  ],
                 ),
-                SizedBox(width: width * 0.02),
-                IconButton(
-                  icon: Icon(
-                    Icons.send,
-                    size: width * 0.06,
-                  ),
-                  color: const Color.fromARGB(255, 56, 117, 173), // Deep purple for better visibility
-                  onPressed: _sendMessage,
-            ),
-          ],
-        ),
-      ),
-          SizedBox(height: height * 0.02), // Add space at the bottom
-        ],
-      ),
+              ),
+              SizedBox(height: height * 0.02), // Add space at the bottom
+            ],
+          ),
+        );
+      },
     );
   }
 } 

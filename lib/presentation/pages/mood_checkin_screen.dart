@@ -36,56 +36,53 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Mood Check-in',
-          style: TextStyle(
-            fontSize: width * 0.05,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        backgroundColor: AppConstants.primaryColor,
-        foregroundColor: AppConstants.textPrimaryColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            size: width * 0.06,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SafeArea(
-        child: BlocBuilder<MoodBloc, MoodState>(
-          builder: (context, state) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.all(width * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Always show mood selector
-                  _buildMoodSelector(width, height),
-                  SizedBox(height: height * 0.02),
-                  
-                  // Always show note input
-                  _buildNoteInput(width, height),
-                  SizedBox(height: height * 0.02),
-                  
-                  // Always show save button
-                  _buildSaveButton(width, height),
-                  SizedBox(height: height * 0.02),
-                  
-                  // Show mood history based on state
-                  _buildMoodHistory(state, width, height),
-                ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = constraints.maxHeight;
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Mood Check-in',
+              style: TextStyle(
+                fontSize: width * 0.05,
+                fontWeight: FontWeight.w600,
               ),
-            );
-          },
-        ),
-      ),
+            ),
+            backgroundColor: AppConstants.primaryColor,
+            foregroundColor: AppConstants.textPrimaryColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                size: width * 0.06,
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          body: SafeArea(
+            child: BlocBuilder<MoodBloc, MoodState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.all(width * 0.04),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildMoodSelector(width, height),
+                      SizedBox(height: height * 0.02),
+                      _buildNoteInput(width, height),
+                      SizedBox(height: height * 0.02),
+                      _buildSaveButton(width, height),
+                      SizedBox(height: height * 0.02),
+                      _buildMoodHistory(state, width, height),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 

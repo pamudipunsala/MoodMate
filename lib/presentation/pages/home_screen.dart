@@ -141,6 +141,10 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
 
+    final width = MediaQuery.of(context).size.width;
+    final fontSizeTitle = (width * 0.045).clamp(18.0, 32.0);
+    final fontSizeSubtitle = (width * 0.015).clamp(14.0, 24.0);
+
     return Container(
       padding: const EdgeInsets.all(AppConstants.spacingL),
       decoration: BoxDecoration(
@@ -152,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             emoji,
-            style: const TextStyle(fontSize: 48),
+            style: TextStyle(fontSize: fontSizeTitle),
           ),
           const SizedBox(width: AppConstants.spacingM),
           Expanded(
@@ -163,6 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Today\'s Mood',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: AppConstants.textSecondaryColor,
+                    fontSize: fontSizeSubtitle,
                   ),
                 ),
                 Text(
@@ -170,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: AppConstants.textPrimaryColor,
                     fontWeight: FontWeight.bold,
+                    fontSize: fontSizeTitle,
                   ),
                 ),
                 if (mood.note != null && mood.note!.isNotEmpty) ...[
@@ -178,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mood.note!,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppConstants.textPrimaryColor,
+                      fontSize: fontSizeSubtitle,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -247,6 +254,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuoteOfTheDay() {
+    final width = MediaQuery.of(context).size.width;
+    final fontSizeTitle = (width * 0.035).clamp(14.0, 22.0);
+    final fontSizeQuote = (width * 0.04).clamp(16.0, 28.0);
     return BlocBuilder<QuotesBloc, QuotesState>(
       builder: (context, state) {
         if (state is QuotesLoaded) {
@@ -265,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(
                       Icons.format_quote,
                       color: AppConstants.textSecondaryColor,
-                      size: 20,
+                      size: fontSizeTitle + 2,
                     ),
                     const SizedBox(width: AppConstants.spacingS),
                     Text(
@@ -273,6 +283,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: const Color.fromARGB(255, 162, 170, 177),
                         fontWeight: FontWeight.w600,
+                        fontSize: fontSizeTitle,
                       ),
                     ),
                   ],
@@ -283,6 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: AppConstants.textPrimaryColor,
                     fontStyle: FontStyle.italic,
+                    fontSize: fontSizeQuote,
                   ),
                 ),
               ],

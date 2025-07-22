@@ -96,7 +96,13 @@ class _QuoteScreenState extends State<QuoteScreen> {
         final height = constraints.maxHeight;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Motivational Quote'),
+            title: Text(
+              'Motivational Quote',
+              style: TextStyle(
+                fontSize: width * 0.05,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             backgroundColor: AppConstants.primaryColor,
             foregroundColor: AppConstants.textPrimaryColor,
             elevation: 0,

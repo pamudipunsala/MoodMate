@@ -100,7 +100,26 @@ class _SimpleChatScreenState extends State<SimpleChatScreen> {
         elevation: 0,
       ),
       body: Column(
-          children: [
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(top: height * 0.01, left: width * 0.04, right: width * 0.04, bottom: height * 0.01),
+            padding: EdgeInsets.symmetric(vertical: height * 0.012, horizontal: width * 0.03),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.10),
+              borderRadius: BorderRadius.circular(width * 0.02),
+              border: Border.all(color: const Color.fromARGB(255, 108, 153, 185).withOpacity(0.3)),
+            ),
+            child: Text(
+              'Note: This chat is only responsive for emotions and feelings-related messages.',
+              style: TextStyle(
+                color: const Color.fromARGB(255, 108, 153, 185),
+                fontSize: width * 0.035,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.all(width * 0.04),

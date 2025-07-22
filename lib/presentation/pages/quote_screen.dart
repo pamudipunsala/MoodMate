@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_constants.dart';
 // import 'package:lottie/lottie.dart';
+import 'package:share_plus/share_plus.dart';
 
 class QuoteScreen extends StatefulWidget {
   const QuoteScreen({Key? key}) : super(key: key);
@@ -20,7 +21,58 @@ class _QuoteScreenState extends State<QuoteScreen> {
     "Progress, not perfection.",
     "Be kind to yourself.",
     "It’s okay to ask for help.",
-    "You are not alone."
+    "You are not alone.",
+    "Difficult roads often lead to beautiful destinations.",
+    "You have survived 100% of your worst days.",
+    "Believe in yourself and all that you are.",
+    "Storms make trees take deeper roots.",
+    "You are capable of amazing things.",
+    "Healing is not linear.",
+    "You don’t have to control your thoughts. You just have to stop letting them control you.",
+    "You are enough just as you are.",
+    "Take time to do what makes your soul happy.",
+    "Your present circumstances don’t determine where you can go; they merely determine where you start.",
+    "You are allowed to be both a masterpiece and a work in progress.",
+    "One day at a time.",
+    "You are worthy of love and kindness.",
+    "Let your hopes, not your hurts, shape your future.",
+    "You are braver than you believe, stronger than you seem, and smarter than you think.",
+    "Sometimes the people around you won’t understand your journey. They don’t need to, it’s not for them.",
+    "You can do hard things.",
+    "Your only limit is your mind.",
+    "Start where you are. Use what you have. Do what you can.",
+    "The sun will rise and we will try again.",
+    "You don’t have to be perfect to be amazing.",
+    "Growth is growth, no matter how small.",
+    "You are worthy of the time it takes to do the things that heal your heart.",
+    "Your vibe attracts your tribe.",
+    "You are the author of your own story.",
+    "Don’t let yesterday take up too much of today.",
+    "You are more than your mistakes.",
+    "It’s okay to rest. Rest is productive.",
+    "You are not your thoughts.",
+    "You are doing better than you think.",
+    "You are a light in this world.",
+    "You are not behind in life. There’s no set schedule.",
+    "You are allowed to take up space.",
+    "You are not a burden.",
+    "You are loved, even on days you don’t feel it.",
+    "You are making a difference just by being you.",
+    "You are allowed to say no to things that drain you.",
+    "You are not your struggles.",
+    "You are enough, always.",
+    "You are worthy of all the good things in life.",
+    "You are resilient, strong, and brave.",
+    "You are allowed to feel and heal at your own pace.",
+    "You are a work in progress, and that’s okay.",
+    "You are not alone on this journey.",
+    "You are capable of rewriting your story.",
+    "You are deserving of happiness and peace.",
+    "You are a beautiful person, inside and out.",
+    "You are not defined by your past.",
+    "You are free to create the life you desire.",
+    "You are worthy of respect and kindness.",
+    "You are enough, just as you are right now.",
   ];
   late String _currentQuote;
 
@@ -95,7 +147,22 @@ class _QuoteScreenState extends State<QuoteScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 60), // Increased bottom space
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppConstants.primaryColor,
+                    foregroundColor: AppConstants.textPrimaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppConstants.borderRadiusM),
+                    ),
+                  ),
+                  onPressed: () {
+                    Share.share('"$_currentQuote" — MoodMate');
+                  },
+                  icon: const Icon(Icons.share),
+                  label: const Text('Share'),
+                ),
+                const SizedBox(height: 28),
                 // Daily affirmation
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

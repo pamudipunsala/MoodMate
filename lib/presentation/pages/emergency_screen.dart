@@ -3,9 +3,52 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_constants.dart';
 import '../widgets/calming_animation.dart';
+import 'package:country_picker/country_picker.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:url_launcher/url_launcher_string.dart';
 
-class EmergencyScreen extends StatelessWidget {
+class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});
+
+  @override
+  State<EmergencyScreen> createState() => _EmergencyScreenState();
+}
+
+class _EmergencyScreenState extends State<EmergencyScreen> {
+  String _selectedCountryCode = 'US';
+  String _selectedCountryName = 'United States';
+  Map<String, dynamic> _hotlines = {};
+  bool _loadingHotlines = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHotlines();
+  }
+
+  Future<void> _loadHotlines() async {
+    final data = await rootBundle.loadString('assets/hotlines.json');
+    setState(() {
+      _hotlines = json.decode(data);
+      _loadingHotlines = false;
+    });
+  }
+
+  Map<String, dynamic>? get _currentHotlines => _hotlines[_selectedCountryCode];
+
+  void _pickCountry() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: false,
+      onSelect: (Country country) {
+        setState(() {
+          _selectedCountryCode = country.countryCode;
+          _selectedCountryName = country.name;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +68,20 @@ class EmergencyScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(width * 0.04),
-          child: Column(
-            children: [
-              _buildCalmingSection(width, height),
-              SizedBox(height: height * 0.03),
-              _buildAffirmationsSection(width, height),
-              SizedBox(height: height * 0.03),
-              _buildEmergencyResourcesSection(context, width, height),
-            ],
-          ),
-        ),
+        child: _loadingHotlines
+            ? Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: EdgeInsets.all(width * 0.04),
+                child: Column(
+                  children: [
+                    _buildCalmingSection(width, height),
+                    SizedBox(height: height * 0.03),
+                    _buildAffirmationsSection(width, height),
+                    SizedBox(height: height * 0.03),
+                    _buildEmergencyResourcesSection(context, width, height),
+                  ],
+                ),
+              ),
       ),
     );
   }
@@ -136,37 +181,90 @@ class EmergencyScreen extends StatelessWidget {
           ),
         ),
         SizedBox(height: height * 0.015),
-        _buildEmergencyCard(
-          context,
-          title: 'National Suicide Prevention Lifeline',
-          subtitle: 'Call ${AppConstants.emergencyHotline}',
-          icon: Icons.phone,
-          color: AppConstants.errorColor,
-          onTap: () => _callEmergencyHotline(context),
-          width: width,
-          height: height,
+        // Move country picker here
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Country: ', style: TextStyle(fontSize: width * 0.04, color: AppConstants.textPrimaryColor)),
+            TextButton.icon(
+              onPressed: _pickCountry,
+              icon: const Icon(Icons.public),
+              label: Text(_selectedCountryName, style: TextStyle(fontSize: width * 0.04)),
+            ),
+          ],
         ),
-        SizedBox(height: height * 0.015),
-        // _buildEmergencyCard(
-        //   context,
-        //   title: 'Crisis Text Line',
-        //   subtitle: AppConstants.emergencyText,
-        //   icon: Icons.message,
-        //   color: AppConstants.warningColor,
-        //   onTap: () => _openCrisisTextLine(context),
-        //   width: width,
-        //   height: height,
-        // ),
-        SizedBox(height: height * 0.015),
-        _buildEmergencyCard(
-          context,
-          title: 'Emergency Services',
-          subtitle: 'Call 119 if you\'re in immediate danger',
-          icon: Icons.emergency,
-          color: AppConstants.errorColor,
-          onTap: () => _callEmergencyServices(context),
-          width: width,
-          height: height,
+        SizedBox(height: height * 0.01),
+        if (_currentHotlines != null) ...[
+          _buildHotlineCard(
+            width,
+            icon: Icons.phone,
+            label: 'Suicide Prevention Lifeline',
+            number: _currentHotlines!['suicide'],
+            onTap: () => _makePhoneCall('tel:${_currentHotlines!['suicide']}'),
+          ),
+          SizedBox(height: height * 0.01),
+          _buildHotlineCard(
+            width,
+            icon: Icons.local_hospital,
+            label: 'Emergency Services',
+            number: _currentHotlines!['emergency'],
+            onTap: () => _makePhoneCall('tel:${_currentHotlines!['emergency']}'),
+          ),
+        ],
+        // Show message if no local hotlines are found
+        if (_currentHotlines == null) ...[
+          Padding(
+            padding: EdgeInsets.only(bottom: height * 0.01),
+            child: Text(
+              'No local hotlines found for your country. Please use the international resource below.',
+              style: TextStyle(
+                color: Colors.red[800],
+                fontWeight: FontWeight.w600,
+                fontSize: width * 0.038,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+        // Always show international help card after local hotlines
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: height * 0.01),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: height * 0.018, horizontal: width * 0.03),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: AppConstants.primaryColor, width: 1.2),
+              borderRadius: BorderRadius.circular(width * 0.02),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Find crisis help in your country',
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 84, 146, 190),
+                    fontWeight: FontWeight.bold,
+                    fontSize: width * 0.045,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: height * 0.005),
+                InkWell(
+                  onTap: () => _launchUrl('https://findahelpline.com/'),
+                  child: Text(
+                    'findahelpline.com',
+                    style: TextStyle(
+                      color: const Color.fromARGB(255, 84, 146, 190),
+                      fontSize: width * 0.035,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         SizedBox(height: height * 0.02),
         Container(
@@ -275,36 +373,15 @@ class EmergencyScreen extends StatelessWidget {
     );
   }
 
-  void _callEmergencyHotline(BuildContext context) {
-    _showConfirmationDialog(
-      context,
-      title: 'Call Suicide Prevention Lifeline',
-      content: 'This will call ${AppConstants.emergencyHotline}. Are you sure?',
-      onConfirm: () {
-        _makePhoneCall('tel:${AppConstants.emergencyHotline}');
-      },
-    );
-  }
-
-  void _openCrisisTextLine(BuildContext context) {
-    _showConfirmationDialog(
-      context,
-      title: 'Open Crisis Text Line',
-      content: 'This will open your messaging app to text HOME to 741741. Are you sure?',
-      onConfirm: () {
-        _sendSMS('741741', 'HOME');
-      },
-    );
-  }
-
-  void _callEmergencyServices(BuildContext context) {
-    _showConfirmationDialog(
-      context,
-      title: 'Call Emergency Services',
-      content: 'This will call 119. Only use this if you are in immediate danger. Are you sure?',
-      onConfirm: () {
-        _makePhoneCall('tel:119');
-      },
+  Widget _buildHotlineCard(double width, {required IconData icon, required String label, required String number, required VoidCallback onTap}) {
+    return Card(
+      child: ListTile(
+        leading: Icon(icon, color: AppConstants.primaryColor),
+        title: Text(label, style: TextStyle(fontWeight: FontWeight.bold, fontSize: width * 0.04)),
+        subtitle: Text(number, style: TextStyle(fontSize: width * 0.04)),
+        trailing: Icon(Icons.call, color: AppConstants.accentColor),
+        onTap: onTap,
+      ),
     );
   }
 
@@ -371,4 +448,19 @@ class EmergencyScreen extends StatelessWidget {
       // User will see the copied instructions in clipboard
     }
   }
+
+  Future<void> _launchUrl(String url) async {
+  try {
+    final success = await launchUrlString(
+      url,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!success) {
+      debugPrint('Could not launch URL: $url');
+    }
+  } catch (e) {
+    debugPrint('Error launching URL: $e');
+  }
+}
+
 } 

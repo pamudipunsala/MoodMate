@@ -27,41 +27,43 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppConstants.primaryColor,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth;
-          final height = constraints.maxHeight;
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/app_icon.png',
-                  width: width * 0.18,
-                  height: width * 0.18,
-                  fit: BoxFit.contain,
-                ),
-                SizedBox(height: height * 0.04),
-                Text(
-                  AppConstants.appName,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: AppConstants.textPrimaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: width * 0.08,
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final height = constraints.maxHeight;
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/app_icon.png',
+                    width: width * 0.18,
+                    height: width * 0.18,
+                    fit: BoxFit.contain,
                   ),
-                ),
-                SizedBox(height: height * 0.02),
-                Text(
-                  "Emotional Support, Anytime",
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: AppConstants.textSecondaryColor,
-                    fontSize: width * 0.045,
+                  SizedBox(height: height * 0.04),
+                  Text(
+                    AppConstants.appName,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: AppConstants.textPrimaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: width * 0.08,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: height * 0.02),
+                  Text(
+                    "Emotional Support, Anytime",
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppConstants.textSecondaryColor,
+                      fontSize: width * 0.045,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

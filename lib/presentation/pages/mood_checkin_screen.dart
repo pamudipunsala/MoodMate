@@ -4,6 +4,7 @@ import '../../core/constants/app_constants.dart';
 import '../../domain/entities/mood_entry.dart';
 import '../bloc/mood/mood_bloc.dart';
 import '../widgets/mood_selector.dart';
+import 'package:share_plus/share_plus.dart';
 
 class MoodCheckinScreen extends StatefulWidget {
   const MoodCheckinScreen({super.key});
@@ -103,7 +104,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             color: AppConstants.primaryColor.withOpacity(0.06),
             blurRadius: 12,
             offset: Offset(0, 2),
-          ),
+        ),
         ],
       ),
       child: MoodSelector(
@@ -132,7 +133,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             color: AppConstants.primaryColor.withOpacity(0.06),
             blurRadius: 12,
             offset: Offset(0, 2),
-          ),
+        ),
         ],
       ),
       child: Column(
@@ -194,7 +195,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             color: AppConstants.primaryColor.withOpacity(0.06),
             blurRadius: 12,
             offset: Offset(0, 2),
-          ),
+        ),
         ],
       ),
       child: ElevatedButton(
@@ -236,7 +237,7 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
             color: AppConstants.primaryColor.withOpacity(0.06),
             blurRadius: 12,
             offset: Offset(0, 2),
-          ),
+        ),
         ],
       ),
       child: Column(
@@ -419,28 +420,26 @@ class _MoodCheckinScreenState extends State<MoodCheckinScreen> {
                     fontSize: width * 0.04,
                   ),
                 ),
-                if (mood.note != null && mood.note!.isNotEmpty) ...[
-                  SizedBox(height: height * 0.005),
+                if (mood.note != null && mood.note!.isNotEmpty)
                   Text(
                     mood.note!,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppConstants.textSecondaryColor,
                       fontSize: width * 0.035,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-                SizedBox(height: height * 0.005),
-                Text(
-                  _formatDate(mood.timestamp),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppConstants.textSecondaryColor,
-                    fontSize: width * 0.03,
-                  ),
-                ),
               ],
             ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.share),
+            color: AppConstants.accentColor,
+            tooltip: 'Share to Story',
+            onPressed: () {
+              final note = (mood.note != null && mood.note!.isNotEmpty) ? '\nNote: ${mood.note!}' : '';
+              final shareText = 'Mood Check-in: $emoji $label$note\n— via MoodMate';
+              Share.share(shareText);
+            },
           ),
         ],
       ),

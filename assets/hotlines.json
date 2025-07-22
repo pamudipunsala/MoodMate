@@ -1,0 +1,17 @@
+{
+  "US": {"name": "United States", "suicide": "988", "emergency": "911"},
+  "UK": {"name": "United Kingdom", "suicide": "116 123", "emergency": "999"},
+  "IN": {"name": "India", "suicide": "9152987821", "emergency": "112"},
+  "AU": {"name": "Australia", "suicide": "13 11 14", "emergency": "000"},
+  "CA": {"name": "Canada", "suicide": "1-833-456-4566", "emergency": "911"},
+  "SG": {"name": "Singapore", "suicide": "1767", "emergency": "995"},
+  "ZA": {"name": "South Africa", "suicide": "0800 567 567", "emergency": "10111"},
+  "NZ": {"name": "New Zealand", "suicide": "1737", "emergency": "111"},
+  "DE": {"name": "Germany", "suicide": "0800 111 0 111", "emergency": "112"},
+  "FR": {"name": "France", "suicide": "01 45 39 40 00", "emergency": "112"},
+  "BR": {"name": "Brazil", "suicide": "188", "emergency": "190"},
+  "JP": {"name": "Japan", "suicide": "03-5774-0992", "emergency": "119"},
+  "IT": {"name": "Italy", "suicide": "800 860022", "emergency": "112"},
+  "ES": {"name": "Spain", "suicide": "717 003 717", "emergency": "112"},
+  "RU": {"name": "Russia", "suicide": "8-800-200-01-22", "emergency": "112"}
+} 

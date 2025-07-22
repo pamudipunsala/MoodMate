@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
+import 'package:flutter/services.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/theme/app_theme.dart';
@@ -34,6 +35,7 @@ import 'presentation/pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // Hide status bar
   
   // Initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();

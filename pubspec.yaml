@@ -56,6 +56,8 @@ dependencies:
   intl: ^0.19.0
   uuid: ^4.2.1
   url_launcher: ^6.2.4
+  share_plus: ^7.2.1
+  country_picker: ^2.0.21
       
 dev_dependencies:
   flutter_test:
@@ -93,6 +95,7 @@ flutter:
   assets:
     - assets/animations/
     - assets/images/
+    - assets/hotlines.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

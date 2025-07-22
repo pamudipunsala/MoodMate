@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: Icons.chat_bubble_outline,
               title: 'Chat',
               subtitle: 'Talk to AI',
-              color: AppConstants.primaryColor,
+              color: const Color.fromARGB(255, 108, 153, 185),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SimpleChatScreen()),

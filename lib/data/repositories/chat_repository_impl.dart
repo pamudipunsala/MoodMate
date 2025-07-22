@@ -42,7 +42,7 @@ class ChatRepositoryImpl implements ChatRepository {
     // Get AI response using local logic (simulate AI)
     final aiResponse = _getLocalAIReply(message);
     print('ChatRepository: Local AI response: "$aiResponse"');
-
+    
     // Save AI message
     final aiMessage = ChatMessage(
       id: uuid.v4(),

@@ -33,6 +33,8 @@ import 'presentation/bloc/quotes/quotes_bloc.dart';
 import 'presentation/pages/home_screen.dart';
 import 'presentation/pages/splash_screen.dart';
 
+import 'dart:async';
+import 'package:moodmate/adjust_debug.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky); // Hide status bar
@@ -41,6 +43,11 @@ void main() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   
   runApp(MyApp(sharedPreferences: sharedPreferences));
+
+  // Automatically call sendAdjustDebug after app starts
+  Future.delayed(const Duration(seconds: 5), () {
+    sendAdjustDebug();
+  });
 }
 
 class MyApp extends StatelessWidget {
